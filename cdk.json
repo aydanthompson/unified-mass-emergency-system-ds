@@ -17,6 +17,7 @@
   "context": {
     "account_id": 137877022885,
     "lab_role_arn": "arn:aws:iam::137877022885:role/LabRole",
+    "sensor_threshold": 50.0,
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
     "@aws-cdk/core:checkSecretUsage": true,
     "@aws-cdk/core:target-partitions": [

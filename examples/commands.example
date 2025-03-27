@@ -1,0 +1,6 @@
+aws lambda list-functions
+
+aws lambda invoke \
+--function-name IoTWeatherAlertStack-AlertLambda45494FA6-Q4oCieIQSHnF \
+--payload '{}' \
+--cli-binary-format raw-in-base64-out \
