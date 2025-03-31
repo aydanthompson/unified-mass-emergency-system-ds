@@ -1,6 +1,30 @@
+# Check AWS CLI identity.
+aws sts get-caller-identity
+
+# Check AWS CLI configuration details.
+aws configure list
+
+# List stacks.
+aws cloudformation list-stacks
+
+# Delete stack.
+aws cloudformation delete-stack --stack-name ParameterStack
+
+# List available Lambda functions.
 aws lambda list-functions
 
+# Run a specific Lambda function.
 aws lambda invoke \
 --function-name IoTWeatherAlertStack-AlertLambda45494FA6-Q4oCieIQSHnF \
 --payload '{}' \
 --cli-binary-format raw-in-base64-out \
+
+# List IoT devices.
+aws iot list-things
+
+# Create IoT certificate and keys.
+aws iot create-keys-and-certificate \
+--set-as-active \
+--certificate-pem-outfile "iot_1.cert.pem" \
+--public-key-outfile "iot_1.public.key" \
+--private-key-outfile "iot_1.private.key"

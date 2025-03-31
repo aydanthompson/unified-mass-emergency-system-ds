@@ -15,7 +15,8 @@
     ]
   },
   "context": {
-    "account_id": 137877022885,
+    "account": "137877022885",
+    "region": "us-east-1",
     "lab_role_arn": "arn:aws:iam::137877022885:role/LabRole",
     "sensor_threshold": 50.0,
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,

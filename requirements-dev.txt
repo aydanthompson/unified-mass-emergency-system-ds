@@ -1,2 +1,3 @@
 -r requirements.txt
+awsiotsdk==1.22.2
 pytest==6.2.5
