@@ -2,7 +2,7 @@ yum update -y
 yum install -y python3
 
 pip3 install --upgrade pip setuptools wheel
-pip3 install awsiotsdk
+pip3 install awscrt awsiotsdk
 
 echo "Fetching SSM parameters for device $DEVICE_ID..."
 

@@ -4,21 +4,29 @@ import random
 import threading
 import time
 
+from awscrt.mqtt import QoS
 from awsiot import mqtt_connection_builder
 
+# MQTT configuration.
 ENDPOINT = "a2j8imicgc27m8-ats.iot.us-east-1.amazonaws.com"
 CLIENT_ID = "DepthSensor1"
 PATH_TO_CERT = "/home/ec2-user/cert.pem"
 PATH_TO_KEY = "/home/ec2-user/private.key"
 PATH_TO_ROOT = "/home/ec2-user/AmazonRootCA1.pem"
 
+# Topic configuration.
+DEVICE_ID = "depth-sensor-1"
 ALERT_TOPIC = "sensors/depth/alert"
 BATCH_TOPIC = "sensors/depth/batch"
-DEVICE_ID = "depth-sensor-1"
-THRESHOLD = 40.0
-OFFLINE_CHANCE = 0.2
-OFFLINE_DURATION = (10, 30)
-BATCH_INTERVAL = 20
+
+# Device configuration.
+MIN_DEPTH = 0
+MAX_DEPTH = 50
+ALERT_THRESHOLD = 40.0
+OFFLINE_CHANCE = 0.1
+OFFLINE_DURATION = (30, 60)
+BATCH_INTERVAL = 30
+
 is_offline = False
 local_buffer = []
 
@@ -37,31 +45,41 @@ def main():
     mqtt_connection.connect().result()
     print("Connected.")
 
-    last_batch_time = time.time()
     global is_offline
+    last_batch_time = time.time()
 
     while True:
-        depth = round(random.uniform(0, 30), 2)
+        depth = round(random.uniform(MIN_DEPTH, MAX_DEPTH), 2)
         reading = {
             "device_id": DEVICE_ID,
             "timestamp": time.time(),
             "depth": depth,
         }
 
-        if depth > THRESHOLD and not is_offline:
-            mqtt_connection.publish(ALERT_TOPIC, json.dumps(reading))
+        # Publish alert.
+        if depth > ALERT_THRESHOLD and not is_offline:
+            mqtt_connection.publish(
+                ALERT_TOPIC,
+                json.dumps(reading),
+                QoS.AT_LEAST_ONCE,
+            )
             print("[LOCAL] ALERT =>", reading)
         else:
             local_buffer.append(reading)
 
         now = time.time()
+        # Publish batch.
         if (now - last_batch_time) >= BATCH_INTERVAL and not is_offline:
             if local_buffer:
                 batch_payload = {
                     "device_id": DEVICE_ID,
                     "batch": local_buffer,
                 }
-                mqtt_connection.publish(BATCH_TOPIC, json.dumps(batch_payload))
+                mqtt_connection.publish(
+                    BATCH_TOPIC,
+                    json.dumps(batch_payload),
+                    QoS.AT_LEAST_ONCE,
+                )
                 print("[LOCAL] BATCH =>", len(local_buffer), "readings.")
                 local_buffer.clear()
             last_batch_time = now
