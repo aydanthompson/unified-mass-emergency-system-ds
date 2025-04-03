@@ -34,13 +34,13 @@ local_buffer = []
 
 def main():
     mqtt_connection = mqtt_connection_builder.mtls_from_path(
-        cert_filepath=PATH_TO_CERT,
-        pri_key_filepath=PATH_TO_KEY,
         endpoint=ENDPOINT,
-        ca_filepath=PATH_TO_ROOT,
         client_id=CLIENT_ID,
         clean_session=False,
         keep_alive_secs=30,
+        ca_filepath=PATH_TO_ROOT,
+        cert_filepath=PATH_TO_CERT,
+        pri_key_filepath=PATH_TO_KEY,
     )
     print("Connecting to IoT...")
     mqtt_connection.connect().result()
