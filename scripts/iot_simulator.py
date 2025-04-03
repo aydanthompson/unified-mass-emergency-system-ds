@@ -26,6 +26,7 @@ ALERT_THRESHOLD = 40.0
 OFFLINE_CHANCE = 0.1
 OFFLINE_DURATION = (30, 60)
 BATCH_INTERVAL = 30
+READING_FREQUENCY = 5
 
 is_offline = False
 local_buffer = []
@@ -97,7 +98,7 @@ def main():
 
             threading.Thread(target=back_online, daemon=True).start()
 
-        time.sleep(5)
+        time.sleep(READING_FREQUENCY)
 
 
 if __name__ == "__main__":
