@@ -93,6 +93,7 @@ def main():
 
             def back_online():
                 time.sleep(offline_time)
+                global is_offline
                 is_offline = False
                 print("[LOCAL] Sensor back online.")
 
