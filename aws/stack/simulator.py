@@ -67,7 +67,7 @@ nohup python3 /home/ec2-user/iot_simulator.py > /home/ec2-user/sim.log 2>&1 &
         instance = ec2.Instance(
             self,
             "IoTSimulatorInstance",
-            instance_type=ec2.InstanceType("t4g.micro"),
+            instance_type=ec2.InstanceType("t4g.nano"),
             machine_image=ec2.MachineImage.latest_amazon_linux2(
                 cpu_type=ec2.AmazonLinuxCpuType.ARM_64,
             ),
