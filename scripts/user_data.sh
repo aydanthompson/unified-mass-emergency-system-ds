@@ -6,6 +6,8 @@ pip3 install awscrt awsiotsdk
 
 echo "Fetching SSM parameters for device $DEVICE_ID..."
 
+export AWS_DEFAULT_REGION=us-east-1
+
 aws ssm get-parameter \
   --name "/iot/$DEVICE_ID/private_key" \
   --query "Parameter.Value" \
