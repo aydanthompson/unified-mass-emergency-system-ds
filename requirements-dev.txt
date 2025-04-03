@@ -1,3 +1,4 @@
 -r requirements.txt
+awscrt==0.24.1
 awsiotsdk==1.22.2
 pytest==6.2.5
