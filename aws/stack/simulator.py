@@ -57,7 +57,7 @@ class IoTSimulatorStack(Stack):
             f"{simulator_code}\n"
             "EOF\n"
             "chmod +x /home/ec2-user/iot_simulator.py\n"
-            "nohup python3 /home/ec2-user/iot_simulator.py > /home/ec2-user/sim.log 2>&1 &\n"
+            "nohup python3 -u /home/ec2-user/iot_simulator.py > /home/ec2-user/sim.log 2>&1 &\n"
             "sleep 10\n"
         )
 
