@@ -65,8 +65,8 @@ def main():
                 QoS.AT_LEAST_ONCE,
             )
             print("[LOCAL] ALERT =>", reading)
-        else:
-            local_buffer.append(reading)
+
+        local_buffer.append(reading)
 
         now = time.time()
         # Publish batch.
