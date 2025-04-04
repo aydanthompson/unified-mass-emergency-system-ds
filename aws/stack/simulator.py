@@ -49,20 +49,17 @@ class IoTSimulatorStack(Stack):
         # `cat << 'EOF' > ...` is called a "here document".
         # `2>&1` sends both stdout and stderr output to sim.log.
         # `&` runs the command in the background.
-        final_user_data = f"""\
-#!/bin/bash
-DEVICE_ID="{device_id}"
-
-{base_user_data}
-
-cat << 'EOF' > /home/ec2-user/iot_simulator.py
-{simulator_code}
-EOF
-
-chmod +x /home/ec2-user/iot_simulator.py
-
-nohup python3 /home/ec2-user/iot_simulator.py > /home/ec2-user/sim.log 2>&1 &
-"""
+        final_user_data = (
+            "#!/bin/bash\n"
+            f'DEVICE_ID="{device_id}"\n'
+            f"{base_user_data}\n"
+            "cat << 'EOF' > /home/ec2-user/iot_simulator.py\n"
+            f"{simulator_code}\n"
+            "EOF\n"
+            "chmod +x /home/ec2-user/iot_simulator.py\n"
+            "nohup python3 /home/ec2-user/iot_simulator.py > /home/ec2-user/sim.log 2>&1 &\n"
+            "sleep 10\n"
+        )
 
         instance = ec2.Instance(
             self,
