@@ -10,6 +10,7 @@ export AWS_DEFAULT_REGION=us-east-1
 
 aws ssm get-parameter \
   --name "/iot/$DEVICE_ID/private_key" \
+  --with-decryption \
   --query "Parameter.Value" \
   --output text \
   > /home/ec2-user/private.key
