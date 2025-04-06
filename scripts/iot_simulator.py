@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import os
 import random
 import threading
 import time
@@ -27,12 +28,16 @@ OFFLINE_CHANCE = 0.1
 OFFLINE_DURATION = (30, 60)
 BATCH_INTERVAL = 30
 READING_FREQUENCY = 5
+ALERT_COOLDOWN_SECS = float(os.getenv("ALERT_COOLDOWN_SECS", "300"))
 
 is_offline = False
 local_buffer = []
+last_alert_time = 0.0
 
 
 def main():
+    global is_offline, last_alert_time
+
     mqtt_connection = mqtt_connection_builder.mtls_from_path(
         endpoint=ENDPOINT,
         client_id=CLIENT_ID,
@@ -46,7 +51,6 @@ def main():
     mqtt_connection.connect().result()
     print("Connected.")
 
-    global is_offline
     last_batch_time = time.time()
 
     while True:
@@ -59,12 +63,17 @@ def main():
 
         # Publish alert.
         if depth > ALERT_THRESHOLD and not is_offline:
-            mqtt_connection.publish(
-                ALERT_TOPIC,
-                json.dumps(reading),
-                QoS.AT_LEAST_ONCE,
-            )
-            print("[LOCAL] ALERT =>", reading)
+            now = time.time()
+            if now - last_alert_time >= ALERT_COOLDOWN_SECS:
+                mqtt_connection.publish(
+                    ALERT_TOPIC,
+                    json.dumps(reading),
+                    QoS.AT_LEAST_ONCE,
+                )
+                last_alert_time = now
+                print("[LOCAL] ALERT =>", reading)
+            else:
+                print("[LOCAL] ALERT => Skipped due to cooldown.")
 
         local_buffer.append(reading)
 
